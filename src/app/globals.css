@@ -1,26 +1,185 @@
+/* Fallback from Google Fonts — must come first */
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700;800&display=swap');
+
+/*
+ * FONT: Greycliff Hebrew CF
+ * Place WOFF2 files in /public/fonts/ to activate.
+ * Falls back gracefully to Assistant.
+ */
+@font-face {
+  font-family: 'Greycliff Hebrew CF';
+  src: url('/fonts/GreycliffHebrewCF-Light.woff2') format('woff2');
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Greycliff Hebrew CF';
+  src: url('/fonts/GreycliffHebrewCF-Regular.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Greycliff Hebrew CF';
+  src: url('/fonts/GreycliffHebrewCF-Medium.woff2') format('woff2');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Greycliff Hebrew CF';
+  src: url('/fonts/GreycliffHebrewCF-DemiBold.woff2') format('woff2');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Greycliff Hebrew CF';
+  src: url('/fonts/GreycliffHebrewCF-Bold.woff2') format('woff2');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Greycliff Hebrew CF';
+  src: url('/fonts/GreycliffHebrewCF-ExtraBold.woff2') format('woff2');
+  font-weight: 800; font-style: normal; font-display: swap;
+}
+
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ─── Design Tokens ─── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Brand */
+  --color-brand:        #3EB8A5;
+  --color-brand-dark:   #2D9D8E;
+  --color-brand-deep:   #1A3530;
+  --color-brand-light:  #CFEDEA;
+  --color-brand-subtle: #EAF7F5;
+
+  /* Semantic */
+  --color-correct:   #2BAA8A;
+  --color-incorrect: #E05252;
+  --color-warning:   #F0A520;
+
+  /* Neutral */
+  --color-bg:         #F6FAF9;
+  --color-surface:    #FFFFFF;
+  --color-surface-2:  #F0F7F5;
+  --color-ink:        #2F3A39;
+  --color-ink-sec:    #4D6B67;
+  --color-ink-muted:  #8FACA9;
+  --color-border:     #D4EAE7;
+
+  /* Font */
+  --font-sans: 'Greycliff Hebrew CF', 'Assistant', sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Reset ─── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  direction: rtl;
+  font-family: 'Greycliff Hebrew CF', 'Assistant', sans-serif;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  /* Prevent iOS bounce on the overall page */
+  overscroll-behavior: none;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #F6FAF9;
+  color: #2F3A39;
+  font-family: 'Greycliff Hebrew CF', 'Assistant', sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+
+/* ─── Shadows ─── */
+.card-shadow    { box-shadow: 0 2px 12px rgba(29,144,128,0.08); }
+.card-shadow-md { box-shadow: 0 4px 24px rgba(29,144,128,0.12); }
+.card-shadow-lg { box-shadow: 0 8px 40px rgba(29,144,128,0.18); }
+
+/* ─── Course card ─── */
+.course-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.course-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(62,184,165,0.22);
+}
+.course-card:active {
+  transform: translateY(0);
+}
+
+/* ─── Answer button ─── */
+.answer-btn { transition: all 0.13s ease; }
+.answer-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(62,184,165,0.18);
+}
+.answer-btn:active:not(:disabled) { transform: translateY(0); }
+
+/* ─── Topic card ─── */
+.topic-card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.topic-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(62,184,165,0.14);
+}
+
+/* ─── Onboarding option card ─── */
+.option-card {
+  transition: all 0.18s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.option-card:hover {
+  transform: translateY(-2px);
+}
+.option-card:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ─── Timer ─── */
+@keyframes timer-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+.timer-urgent { animation: timer-pulse 0.65s ease-in-out infinite; }
+
+/* ─── Animations ─── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fade-up 0.28s ease both; }
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.fade-in { animation: fade-in 0.22s ease both; }
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.90); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.scale-in { animation: scale-in 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+@keyframes score-pop {
+  0%   { transform: scale(0.80); opacity: 0; }
+  60%  { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+.score-pop { animation: score-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.slide-up { animation: slide-up 0.32s ease both; }
+
+/* Stagger helpers */
+.delay-75  { animation-delay: 0.075s; }
+.delay-100 { animation-delay: 0.10s; }
+.delay-150 { animation-delay: 0.15s; }
+.delay-200 { animation-delay: 0.20s; }
+.delay-300 { animation-delay: 0.30s; }
+.delay-400 { animation-delay: 0.40s; }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #E4F3F0; }
+::-webkit-scrollbar-thumb { background: #AADBD5; border-radius: 4px; }
