@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useAuthStore } from '@/store/authStore';
 import { useProgressStore } from '@/store/progressStore';
 import { useCourseStore, type CourseType } from '@/store/courseStore';
@@ -9,8 +10,6 @@ import Icon from '@/components/ui/Icon';
 import BottomNav from '@/components/ui/BottomNav';
 import TopNav from '@/components/ui/TopNav';
 import IllustrationBg from '@/components/ui/IllustrationBg';
-
-interface AppUser { displayName: string; username: string; }
 
 function getLevelInfo(p: number): { level: number; title: string } {
   if (p >= 50) return { level: 8, title: 'מומחה' };
@@ -91,28 +90,23 @@ function CourseSheet({
 
 export default function ProfilePage() {
   const router            = useRouter();
-  const logout            = useAuthStore(s => s.logout);
-  const courseType        = useCourseStore(s => s.courseType);
-  const setCourseType     = useCourseStore(s => s.setCourseType);
-  const getTotalPractices = useProgressStore(s => s.getTotalPractices);
-  const getAverageScore   = useProgressStore(s => s.getAverageScore);
-  const clearProgress     = useProgressStore(s => s.clearProgress);
+  const { data: session }   = useSession();
+  const logout              = useAuthStore(s => s.logout);
+  const courseType          = useCourseStore(s => s.courseType);
+  const setCourseType       = useCourseStore(s => s.setCourseType);
+  const getTotalPractices   = useProgressStore(s => s.getTotalPractices);
+  const getAverageScore     = useProgressStore(s => s.getAverageScore);
+  const clearProgress       = useProgressStore(s => s.clearProgress);
 
-  const [user, setUser]                     = useState<AppUser | null>(null);
-  const [notifications, setNotifications]   = useState(true);
+  const [notifications, setNotifications]     = useState(true);
   const [showCourseSheet, setShowCourseSheet] = useState(false);
-
-  useEffect(() => {
-    fetch('/api/auth/me')
-      .then(r => r.json())
-      .then(d => { if (d.user) setUser(d.user); })
-      .catch(() => {});
-  }, []);
 
   const totalPractices = getTotalPractices();
   const avgScore       = getAverageScore();
   const { level, title } = getLevelInfo(totalPractices);
-  const initials     = user?.displayName?.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() ?? '?';
+  const displayName  = session?.user?.name ?? '';
+  const username     = session?.user?.email ?? '';
+  const initials     = displayName.split(' ').map((n: string) => n[0]).filter(Boolean).slice(0, 2).join('').toUpperCase() || '?';
   const courseLabel  = courseType === 'moavil' ? 'קורס מוביל' : courseType === 'tsiburi' ? 'קורס ציבורי' : '—';
 
   const settingsRows = [
@@ -140,8 +134,8 @@ export default function ProfilePage() {
         >
           {initials}
         </div>
-        <h1 className="text-xl font-800 text-[#2F3A39]">{user?.displayName ?? '...'}</h1>
-        <p className="text-sm mt-0.5 text-[#4D6B67]">{user?.username ?? ''}</p>
+        <h1 className="text-xl font-800 text-[#2F3A39]">{displayName || '...'}</h1>
+        <p className="text-sm mt-0.5 text-[#4D6B67]">{username}</p>
         <div className="flex justify-center mt-3">
           <span
             className="px-4 py-1.5 rounded-full text-xs font-700"
@@ -182,8 +176,8 @@ export default function ProfilePage() {
               >
                 {initials}
               </div>
-              <h2 className="text-xl font-800 text-[#2F3A39]">{user?.displayName ?? '...'}</h2>
-              <p className="text-sm text-[#4D6B67] mt-0.5">{user?.username ?? ''}</p>
+              <h2 className="text-xl font-800 text-[#2F3A39]">{displayName || '...'}</h2>
+              <p className="text-sm text-[#4D6B67] mt-0.5">{username}</p>
               <div className="flex justify-center mt-3">
                 <span
                   className="px-4 py-1.5 rounded-full text-xs font-700"

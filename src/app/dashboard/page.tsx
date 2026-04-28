@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import type { Topic } from '@/types/question';
 import { getAllTopics } from '@/lib/data/questionBank';
 import { buildQuiz } from '@/lib/quiz/quizBuilder';
@@ -26,22 +27,15 @@ export default function DashboardPage() {
   const getOverallScore   = useProgressStore(s => s.getOverallScore);
   const getTotalPractices = useProgressStore(s => s.getTotalPractices);
 
+  const { data: session }                 = useSession();
   const [topics, setTopics]               = useState<Topic[]>([]);
   const [loadingTopics, setLoadingTopics] = useState(true);
   const [startingId, setStartingId]       = useState<string | null>(null);
   const [startingFull, setStartingFull]   = useState(false);
-  const [user, setUser]                   = useState<{ displayName: string } | null>(null);
 
   useEffect(() => {
     if (courseType === null) router.replace('/onboarding');
   }, [courseType, router]);
-
-  useEffect(() => {
-    fetch('/api/auth/me')
-      .then(r => r.json())
-      .then(d => { if (d.user) setUser(d.user); })
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     getAllTopics().then(t => { setTopics(t); setLoadingTopics(false); });
@@ -67,7 +61,7 @@ export default function DashboardPage() {
   const totalPractices = getTotalPractices();
   const hour           = new Date().getHours();
   const greeting       = hour < 12 ? 'בוקר טוב' : hour < 17 ? 'צהריים טובים' : 'ערב טוב';
-  const firstName      = user?.displayName?.split(' ')[0] ?? '';
+  const firstName      = session?.user?.name?.split(' ')[0] ?? '';
   const isTsiburi      = courseType === 'tsiburi';
 
   if (courseType === null) return null;

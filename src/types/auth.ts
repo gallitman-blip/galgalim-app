@@ -1,30 +1,17 @@
-// ─── Stored in the authorized-users list ─────────────────────────────────────
+/**
+ * Auth types — now powered by NextAuth / Auth.js
+ *
+ * The full session shape is provided by next-auth's built-in types.
+ * Use `useSession()` on the client or `auth()` on the server to access it.
+ *
+ * Session payload (from Google):
+ *   session.user.name   — full display name
+ *   session.user.email  — Gmail address (used for whitelist check)
+ *   session.user.image  — Google profile photo URL
+ */
 
-export interface AuthorizedUser {
-  id: number;
-  username: string;
-  password: string;      // plain-text for MVP — swap for bcrypt hash in Phase 2
-  active: boolean;       // false = blocked (payment lapsed, manual disable, etc.)
-  displayName: string;   // shown inside the app
-  phone?: string;        // kept for future OTP / WhatsApp login migration
-}
-
-// ─── Stored in the encrypted session cookie (public fields only) ──────────────
-
+// Kept as a convenience alias used in a few places that need just these two fields.
 export interface AppUser {
-  id: number;
-  username: string;
-  displayName: string;
+  name:  string;
+  email: string;
 }
-
-// ─── iron-session payload ─────────────────────────────────────────────────────
-
-export interface SessionData {
-  user?: AppUser;
-}
-
-// ─── Return type for login lookup ─────────────────────────────────────────────
-
-export type LoginResult =
-  | { ok: true;  user: AppUser }
-  | { ok: false; reason: 'invalid_credentials' | 'inactive' };

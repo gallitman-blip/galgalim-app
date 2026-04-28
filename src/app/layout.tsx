@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import { Providers } from '@/components/providers';
 
 export const metadata: Metadata = {
   title: 'מכללת גלגלים — תרגול',
@@ -25,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         Mobile: full screen, no decoration.
       */}
       <body className="bg-[#F6FAF9]">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
