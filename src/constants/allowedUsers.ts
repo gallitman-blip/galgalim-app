@@ -11,5 +11,5 @@
  *   "student.name@gmail.com",
  */
 export const ALLOWED_EMAILS: string[] = [
-  'gallitman1@gmail.com','pelegmaor@gmail.com', 'refaellitman@gmail.com', 'aramenislam@gmail.com'
+  'gallitman1@gmail.com','pelegmaor@gmail.com', 'refaellitman@gmail.com', 'aramenislam@gmail.com', 'itaimines.a.m@gmail.com'
 ];
